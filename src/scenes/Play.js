@@ -4,9 +4,9 @@ class Play extends Phaser.Scene{
     }
     preload(){
         //load images/tile sprite
-        this.load.image('rocket', './assets/rockets.png');
-        this.load.image('spaceship', './assets/spaceshis.png');
-        this.load.image('starfield', './assets/starfields.png');
+        this.load.image('rocket', './assets/rocket.png');
+        this.load.image('spaceship', './assets/spaceship.png');
+        this.load.image('starfield', './assets/starfield.png');
     }
     create() {
         //place tile sprite
@@ -59,7 +59,7 @@ class Play extends Phaser.Scene{
         }
         if (this.checkCollision(this.p1Rocket, this.ship01)) {
             this.p1Rocket.reset();
-            this.ship01.reset();
+            this.ship0.reset();
         }
     }
     checkCollision(rocket, ship) {

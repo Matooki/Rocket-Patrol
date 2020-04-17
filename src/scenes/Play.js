@@ -25,7 +25,7 @@ class Play extends Phaser.Scene {
 
         // green UI background
         this.add.rectangle(37, 42, 566, 64, 0xFACADE).setOrigin(0, 0);
-        this.add.rectangle(200, 200,200,200, 0xFACADE).setOrigin(0, 0);
+     
 
         // add rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2 - 8, 431, 'rocket').setScale(0.5, 0.5).setOrigin(0, 0);
@@ -40,7 +40,7 @@ class Play extends Phaser.Scene {
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodesD);
+        keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 

@@ -5,11 +5,12 @@ class Play extends Phaser.Scene {
 
     preload() {
         // load images/tile sprites
-        this.load.image('rocket', './assets/rocket.png');
-        this.load.image('spaceship', './assets/spaceship.png');
+        this.load.image('piggy', './assets/piggybank.png');
+        //this.load.image('money', './assets/money.gif');
         this.load.image('starfield', './assets/starfield.png');
         
         // load spritesheet
+        this.load.spritesheet('money', './assets/money.png', {frameWidth: 55, frameHeight: 36, startFrame: 0, endFrame: 9});
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
     }
 
@@ -25,16 +26,19 @@ class Play extends Phaser.Scene {
 
         // green UI background
         this.add.rectangle(37, 42, 566, 64, 0xFACADE).setOrigin(0, 0);
+
+        const moneyFly = this.add.sprite(200, 200, 'money', 0);
      
 
         // add rocket (p1)
-        this.p1Rocket = new Rocket(this, game.config.width/2 - 8, 431, 'rocket').setScale(0.5, 0.5).setOrigin(0, 0);
-        this.p2Rocket = new Rocket2(this, game.config.width/2 + 18, 431, 'rocket').setScale(0.5, 0.5).setOrigin(0, 0);
+        this.p1Rocket = new Rocket(this, game.config.width/2 - 8, 431, 'piggy').setScale(0.5, 0.5).setOrigin(0, 0);
+        this.p2Rocket = new Rocket2(this, game.config.width/2 + 8, 431, 'piggy').setScale(0.5, 0.5).setOrigin(0, 0);
+       
 
         // add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'spaceship', 0, 30).setOrigin(0,0);
-        this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'spaceship', 0, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, 260, 'spaceship', 0, 10).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'moneyFly', 0, 30).setOrigin(0,0);
+        this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'money', 0, 20).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width, 260, 'money', 0, 10).setOrigin(0,0);
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -50,6 +54,14 @@ class Play extends Phaser.Scene {
             frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 9, first: 0}),
             frameRate: 30
         });
+        
+        this.anims.create({
+            key: 'money',
+            frames: this.anims.generateFrameNumbers('moneyFly', {start: 0, end: 9, first: 0}),
+            frameRate: 30,
+            repeat: -1
+        });
+        
 
         // player 1 score
         this.p1Score = 0;
@@ -81,6 +93,8 @@ class Play extends Phaser.Scene {
         }, null, this);
     }
 
+    
+
     update() {
         // check key input for restart / menu
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyF)) {
@@ -97,8 +111,10 @@ class Play extends Phaser.Scene {
             this.ship01.update();           // update spaceships (x3)
             this.ship02.update();
             this.ship03.update();
-        }             
-
+            
+        }        
+             
+      // this.moneyFlap(this.ship01);
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)) {
             this.p1Rocket.reset();
@@ -157,5 +173,17 @@ class Play extends Phaser.Scene {
 
         // play sound
         this.sound.play('sfx_explosion');  
+    }
+
+    moneyFlap(ship) {
+        ship.alpha = 0;                         // temporarily hide ship
+        // create explosion sprite at ship's position
+        let flap = this.add.sprite(ship.x, ship.y, 'money').setOrigin(0, 0);
+        flap.anims.play('money');            // play explode animation
+        flap.on('animationcomplete', () => {    // callback after animation completes
+                              // reset ship position
+            ship.alpha = 1;                   // make ship visible again
+                              // remove explosion sprite
+        });
     }
 }

@@ -7,6 +7,7 @@ class Spaceship extends Phaser.GameObjects.Sprite {
             this.points = pointValue;  //track rockets firing status
     }
 
+
     update(){
         //move spaceship left
         this.x -=3;

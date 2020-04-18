@@ -6,19 +6,21 @@ class Play extends Phaser.Scene {
     preload() {
         // load images/tile sprites
         this.load.image('piggy', './assets/piggybank.png');
+        this.load.image('piggy2', './assets/piggybank2.png');
         //this.load.image('money', './assets/money.gif');
-        this.load.image('starfield', './assets/starfield.png');
+       // this.load.image('bank', './assets/bank.png');
         
         // load spritesheet
         this.load.spritesheet('money', './assets/money.png', {frameWidth: 55, frameHeight: 36, startFrame: 0, endFrame: 9});
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('bank', './assets/Backbank.png',  {frameWidth: 640, frameHeight: 480, startFrame: 0, endFrame: 3});
     }
 
     create() {
         // place tile sprite
-        this.starfield = this.add.tileSprite(0, 0, 640, 480, 'starfield').setOrigin(0, 0);
+        //this.bank = this.add.tileSprite(0, 0, 640, 480, 'bank').setOrigin(0, 0);
 
-        // white rectangle borders
+        /* white rectangle borders
         this.add.rectangle(5, 5, 630, 32, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(5, 443, 630, 32, 0xFFFFFF).setOrigin(0, 0);
         this.add.rectangle(5, 5, 32, 455, 0xFFFFFF).setOrigin(0, 0);
@@ -26,19 +28,24 @@ class Play extends Phaser.Scene {
 
         // green UI background
         this.add.rectangle(37, 42, 566, 64, 0xFACADE).setOrigin(0, 0);
+        */
 
         const moneyFly = this.add.sprite(200, 200, 'money', 0);
+        const bank = this.add.sprite(0, 0, 'bank', 0).setOrigin(0, 0);
+        
      
 
         // add rocket (p1)
-        this.p1Rocket = new Rocket(this, game.config.width/2 - 8, 431, 'piggy').setScale(0.5, 0.5).setOrigin(0, 0);
-        this.p2Rocket = new Rocket2(this, game.config.width/2 + 8, 431, 'piggy').setScale(0.5, 0.5).setOrigin(0, 0);
+        this.p1Rocket = new Rocket(this, game.config.width/2 - 8, 431, 'piggy').setScale(1, 1).setOrigin(0, 0);
+    
+        this.p2Rocket = new Rocket2(this, game.config.width/2 + 8, 431, 'piggy2').setScale(1, 1).setOrigin(0, 0);
+    
        
 
         // add spaceships (x3)
-        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'moneyFly', 0, 30).setOrigin(0,0);
-        this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'money', 0, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, 260, 'money', 0, 10).setOrigin(0,0);
+        this.ship01 = new Spaceship(this, game.config.width + 192, 132, 'money', 0, 30, Math.random() * (5-4) + 4).setOrigin(0,0);
+        this.ship02 = new Spaceship(this, game.config.width + 96, 196, 'money', 0, 20,  Math.random() * (4-3) +3).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width, 260, 'money', 0, 10, Math.random() * (3-1) + 1);
 
         // define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
@@ -55,12 +62,16 @@ class Play extends Phaser.Scene {
             frameRate: 30
         });
         
+      
+
         this.anims.create({
-            key: 'money',
-            frames: this.anims.generateFrameNumbers('moneyFly', {start: 0, end: 9, first: 0}),
-            frameRate: 30,
+            key: 'bank',
+            frames: this.anims.generateFrameNumbers('bank', {start: 0, end: 3, first: 0}),
+            frameRate: 5,
             repeat: -1
         });
+
+        bank.play('bank');
         
 
         // player 1 score
@@ -69,17 +80,17 @@ class Play extends Phaser.Scene {
         // score display
         let scoreConfig = {
             fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
+            fontSize: '24px',
+            backgroundColor: '#FACADE',
             color: '#843605',
             align: 'right',
             padding: {
                 top: 5,
                 bottom: 5,
             },
-            fixedWidth: 100
+            fixedWidth: 60
         }
-        this.scoreLeft = this.add.text(69, 54, this.p1Score, scoreConfig);
+        this.scoreLeft = this.add.text(220, 44, '$' + this.p1Score, scoreConfig);
 
         // game over flag
         this.gameOver = false;
@@ -96,6 +107,8 @@ class Play extends Phaser.Scene {
     
 
     update() {
+
+       
         // check key input for restart / menu
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyF)) {
             this.scene.restart();
@@ -104,7 +117,7 @@ class Play extends Phaser.Scene {
             this.scene.start("menuScene");
         }
 
-        this.starfield.tilePositionX -= 4;  // scroll tile sprite
+       // this.bank.tilePositionX -= 4;  // scroll tile sprite
         if (!this.gameOver) {               
             this.p1Rocket.update();         // update rocket sprite
             this.p2Rocket.update();
@@ -113,7 +126,12 @@ class Play extends Phaser.Scene {
             this.ship03.update();
             
         }        
-             
+
+           /* if (this.ship01.x <=0 ){
+                speed = Math.random() * (5-1) +1;
+                ship01.update();
+                console.log(speed);
+            }*/
       // this.moneyFlap(this.ship01);
         // check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)) {

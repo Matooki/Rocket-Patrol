@@ -11,12 +11,12 @@ class Play extends Phaser.Scene {
        // this.load.image('bank', './assets/bank.png');
         
         // load spritesheet
-        this.load.spritesheet('money', './assets/money.png', {frameWidth: 55, frameHeight: 36, startFrame: 0, endFrame: 9});
+        this.load.spritesheet('money', './assets/money.png', {frameWidth: 61, frameHeight: 39, startFrame: 0, endFrame: 9});
         this.load.spritesheet('explosion', './assets/explosion.png', {frameWidth: 64, frameHeight: 32, startFrame: 0, endFrame: 9});
         this.load.spritesheet('bank', './assets/Backbank.png',  {frameWidth: 640, frameHeight: 480, startFrame: 0, endFrame: 3});
     }
 
-    create() {
+    create() { 
         // place tile sprite
         //this.bank = this.add.tileSprite(0, 0, 640, 480, 'bank').setOrigin(0, 0);
 
@@ -30,7 +30,7 @@ class Play extends Phaser.Scene {
         this.add.rectangle(37, 42, 566, 64, 0xFACADE).setOrigin(0, 0);
         */
 
-        const moneyFly = this.add.sprite(200, 200, 'money', 0);
+        //const money = this.add.sprite(200, 200, 'money', 0);
         const bank = this.add.sprite(0, 0, 'bank', 0).setOrigin(0, 0);
         
      
@@ -62,7 +62,12 @@ class Play extends Phaser.Scene {
             frameRate: 30
         });
         
-      
+        this.anims.create({
+            key: 'money',
+            frames: this.anims.generateFrameNumbers('money', {start: 0, end: 7, first: 0}),
+            frameRate: 10,
+            repeat: -1
+        });
 
         this.anims.create({
             key: 'bank',
@@ -72,6 +77,14 @@ class Play extends Phaser.Scene {
         });
 
         bank.play('bank');
+
+        //play money animation
+        this.ship01.play('money');
+        this.ship02.play('money');
+        this.ship03.play('money');
+        
+
+        
         
 
         // player 1 score
@@ -108,7 +121,7 @@ class Play extends Phaser.Scene {
 
     update() {
 
-       
+        
         // check key input for restart / menu
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyF)) {
             this.scene.restart();
